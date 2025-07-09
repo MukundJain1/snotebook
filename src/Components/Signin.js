@@ -12,7 +12,7 @@ const Signin = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(`http://localhost:5000/api/auth/signin`, {
+    const response = await fetch(`https://snotebook-uwg4.onrender.com/api/auth/signin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

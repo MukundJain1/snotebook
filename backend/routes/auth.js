@@ -10,7 +10,6 @@ dotenv.config();
 
 const app = express();
 const router = express.Router(); // this is the router for auth routes
-db.connect();
 
 const JWT_SECRET = process.env.JWT_SECRET; // secret key for signing JWT tokens, should be stored in an environment variable in production
 // Middleware to parse JSON and URL-encoded data

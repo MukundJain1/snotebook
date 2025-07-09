@@ -10,28 +10,42 @@ const NoteState = (props) => {
   //GET NOTES
 
   const getNotes = async () => {
-  try {
-    const response = await fetch(`${host}/api/notes/getNotes`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem('token')
-      },
-    });
+    try {
+      const response = await fetch(`${host}/api/notes/getNotes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem('token')
+        },
+      });
 
-    if (!response.ok) {
-      const text = await response.text();            // read plain-text error
-      console.error("Failed to fetch notes:", text);
-      return;                                        // bail out
+      if (!response.ok) {
+        const text = await response.text();
+        console.error("Failed to fetch notes:", text);
+        return;
+      }
+      const formatDate = (isoDate) => {
+        const date = new Date(isoDate);
+        return date.toLocaleString('en-IN', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        });
+      };
+      let notesFromServer = await response.json();
+
+      // Format dates
+      notesFromServer = notesFromServer.map(note => ({
+        ...note,
+        created_at: formatDate(note.created_at),
+        updated_at: formatDate(note.updated_at)
+      }));
+
+      setNotes(notesFromServer);
+    } catch (err) {
+      console.error("Network or parsing error:", err);
     }
+  };
 
-    const notesFromServer = await response.json();   // now safe to parse JSON
-    setNotes(notesFromServer);
-
-  } catch (err) {
-    console.error("Network or parsing error:", err);
-  }
-};
   //ADD NOTE
 
   const addNote = async (title, description, content) => {
@@ -46,13 +60,27 @@ const NoteState = (props) => {
       });
 
       const result = await response.json();
+      const formatDate = (isoDate) => {
+        const date = new Date(isoDate);
+        return date.toLocaleString('en-IN', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        });
+      };
 
       if (!response.ok) {
         console.error("Failed to add note:", result.error || response.statusText);
         return;
       }
-      // Assuming result contains the new note object
-      setNotes(prevNotes => [...prevNotes, result]);
+
+      // Format dates before setting state
+      const formattedNote = {
+        ...result,
+        created_at: formatDate(result.created_at),
+        updated_at: formatDate(result.updated_at)
+      };
+
+      setNotes(prevNotes => [...prevNotes, formattedNote]);
     } catch (err) {
       console.error("Error adding note:", err);
     }
@@ -83,11 +111,15 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, content }),
     });
+    const formattedDate = new Date().toLocaleString('en-IN', {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    });
     await response.json();
     // To implement later
     setNotes(prev =>
       prev.map(n => n.id === id
-        ? { ...n, title, description, content, updated_at: new Date().toISOString() }
+        ? { ...n, title, description, content, updated_at: formattedDate }
         : n
       )
     );

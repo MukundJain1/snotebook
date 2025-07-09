@@ -1,13 +1,21 @@
 import pg from 'pg';
 import dotenv from 'dotenv';
+
 dotenv.config();
+const {
+  DB_USER,
+  DB_HOST,
+  DB_NAME,
+  DB_PASS,
+  DB_PORT,
+} = process.env;
 
 const db = new pg.Client({
-    user: process.env.user,
-    host: process.env.host,
-    database: process.env.database,
-    password: process.env.password,
-    port: process.env.port,
+  user:     DB_USER,
+  host:     DB_HOST,
+  database: DB_NAME,
+  password: DB_PASS,
+  port:     Number(DB_PORT),
 });
 
 export default {

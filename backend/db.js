@@ -2,20 +2,17 @@ import pg from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const {
-  DB_USER,
-  DB_HOST,
-  DB_NAME,
-  DB_PASS,
-  DB_PORT,
-} = process.env;
+
 
 const db = new pg.Client({
-  user:     DB_USER,
-  host:     DB_HOST,
-  database: DB_NAME,
-  password: DB_PASS,
-  port:     Number(DB_PORT),
+  user:     process.env.DB_USER,
+  host:     process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASS,
+  port:     Number(process.env.DB_PORT),
+  ssl: {
+    rejectUnauthorized: false // This is important for self-signed certificates
+  }
 });
 
 export default {

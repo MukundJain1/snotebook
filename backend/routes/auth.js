@@ -46,7 +46,6 @@ router.post('/signup', [
         const userId = newUser.rows[0].id;
         const data = { user: { id: userId } };
         const authtoken = jwt.sign(data, JWT_SECRET);
-        console.log(authtoken, "signup karte time token");
         success = true;
         return res.status(200).json({ success, authtoken });
     } catch (err) {
@@ -84,7 +83,6 @@ router.post('/signin',
                 email: user.email
             }
             const token = jwt.sign(payload, JWT_SECRET); // generate a JWT token with the user id, name and email
-            console.log(token, "signin karte time token");
             res.json({ success, token }); // send the token back to the client
         } catch (err) {
             return res.status(500).send('Error signing in: ' + err.message);

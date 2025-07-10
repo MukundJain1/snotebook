@@ -10,7 +10,7 @@ const PORT = 5000;
 const allowedOrigins = [
   'http://localhost:3000',
   'https://snotebook-uwg4.onrender.com',
-  'https://snotebook-uwg4.onrender.com/api/auth',
+  'https://snotebook-ana726qk3-mukundjain1s-projects.vercel.app',
 ];
 
 db.connect();

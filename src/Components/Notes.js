@@ -115,13 +115,18 @@ const Notes = ({ showAlert }) => {
                 </Card>
             </Modal>
 
-            <div className="note-container d-flex flex-wrap">
-                {notes.map((n) => (
-                    <Col key={n.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                        <NoteItem note={n} updateNote={handleShow} showAlert={showAlert} />
-                    </Col>
-                ))}
+            <div className="note-container d-flex flex-wrap justify-content-center">
+                {notes.length === 0 ? (
+                    <NoNotes />
+                ) : (
+                    notes.map((n) => (
+                        <Col key={n.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
+                            <NoteItem note={n} updateNote={handleShow} showAlert={showAlert} />
+                        </Col>
+                    ))
+                )}
             </div>
+
 
         </>
     );

@@ -2,7 +2,7 @@ import express from 'express';
 import authRoutes from './routes/auth.js';
 import notesRoutes from './routes/notes.js';
 import cors from 'cors';
-import db from './db.js'; 
+import db from './db.js';
 
 const app = express();
 const PORT = 5000;
@@ -11,6 +11,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://snotebook-uwg4.onrender.com',
   'https://snotebook-ana726qk3-mukundjain1s-projects.vercel.app',
+  'https://snotebook-psi.vercel.app',
 ];
 
 db.connect();

@@ -19,7 +19,6 @@ const Signup = (props) => {
       body: JSON.stringify({ name: cred.name, email: cred.email, password: cred.password })
     });
     const json = await response.json();
-    console.log("json in signup page token", json.token);
     if (!json.success) {
       const message = json.error || (json.errors && json.errors[0]?.msg) || 'Something went wrong';
       props.showAlert(message, 'danger');

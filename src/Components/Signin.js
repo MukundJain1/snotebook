@@ -20,7 +20,6 @@ const Signin = (props) => {
       body: JSON.stringify({ email: cred.email, password: cred.password })
     });
     const json = await response.json();
-    console.log(json);
     if (!json.success) {
       props.showAlert('Invalid Entries', 'danger');
     }

@@ -17,7 +17,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ROUTE 1: SIGNUP page
-console.log('router auth file is fir')
 router.post('/signup', [
     body('email').isEmail().withMessage('Please enter a valid email address'),
     body('password').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long'),
@@ -48,7 +47,6 @@ router.post('/signup', [
         const data = { id: userId };
         const token = jwt.sign(data, JWT_SECRET);
         success = true;
-        console.log('Token generated:', token); // Log the generated token for debugging
         return res.status(200).json({ success, token });
     } catch (err) {
         console.error(err.message);
@@ -85,7 +83,6 @@ router.post('/signin',
                 email: user.email
             }
             const token = jwt.sign(payload, JWT_SECRET); // generate a JWT token with the user id, name and email
-            // console.log('Token generated:', token);
             res.json({ success, token }); // send the token back to the client
         } catch (err) {
             return res.status(500).json({ success: false, error: 'Error signing in: ' + err.message });

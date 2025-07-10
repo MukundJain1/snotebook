@@ -7,14 +7,19 @@ const JWT_SECRET = process.env.JWT_SECRET; // secret key for signing JWT tokens,
 
 export const fetchUser = (req, res, next) => {
     const token = req.header('auth-token');
-    if(!token){
-        return res.status(401).send('Access denied. No token provided.');
+    if (!token) {
+        return res.status(401).json({ error: 'No auth token, access denied' });
     }
-    try{
+    try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.user = decoded; // Attach the user information to the request object
-        next(); // Call the next middleware or route handler
-    }catch(err){
-        return res.status(400).send('Invalid token');
+        if (decoded.user && decoded.user.id) {
+            req.user = { id: decoded.user.id };
+        } else {
+            req.user = decoded;
+        }
+
+        next();
+    } catch (err) {
+        return res.status(400).json({ error: 'Invalid token' });
     }
-}
+};

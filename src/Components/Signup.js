@@ -9,19 +9,26 @@ const Signup = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (cred.password !== cred.cpassword) {
+      props.showAlert("Passwords do not match", "danger");
+      return;
+    }
     const response = await fetch(`https://snotebook-uwg4.onrender.com/api/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: cred.name, email: cred.email, password: cred.password })
     });
     const json = await response.json();
-    console.log(json);
+    console.log("json in signup page token", json.token);
     if (!json.success) {
-      props.showAlert('Invalid Credentials', 'danger');
-    } else {
-      localStorage.setItem('token', json.authtoken);
+      const message = json.error || (json.errors && json.errors[0]?.msg) || 'Something went wrong';
+      props.showAlert(message, 'danger');
+      return;
+    }
+    else {
+      localStorage.setItem('token', json.token);
+      props.showAlert('Signed Up Successfully', 'success');
       navigate('/');
-      props.showAlert('Signed In Successfully', 'success');
     }
     setCred({ name: "", email: "", password: "", cpassword: "" });
   };
@@ -48,6 +55,7 @@ const Signup = (props) => {
                   name="name"
                   value={cred.name}
                   onChange={onchange}
+                  autoComplete='username'
                   placeholder="Enter your full name"
                   required
                 />
@@ -76,6 +84,7 @@ const Signup = (props) => {
                   value={cred.password}
                   onChange={onchange}
                   placeholder="Enter password"
+                  autoComplete='new-password'
                   minLength={5}
                   required
                 />
@@ -89,6 +98,7 @@ const Signup = (props) => {
                   value={cred.cpassword}
                   onChange={onchange}
                   placeholder="Confirm password"
+                  autoComplete='new-password'
                   minLength={5}
                   required
                 />

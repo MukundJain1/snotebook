@@ -1,16 +1,62 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   margin: 0;
-  padding: 0;;
+  padding: 0;
+  ;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Navbar container full height */
+.custom-navbar {
+  min-height: 64px;
+}
+
+/* Circular logo */
+.logo-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #000;
+  /* fallback background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Brand text */
+.brand-text {
+  color: goldenrod;
+  font-weight: 700;
+  font-size: 1.35rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Nav link styling (optional) */
+.linkStyle {
+  color: #ccc !important;
+  margin-left: 1rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.linkStyle:hover {
+  color: goldenrod !important;
 }
 
 .linkStyle {
@@ -20,6 +66,59 @@ body {
   margin-right: 35px;
 }
 
-button{
+button {
   cursor: pointer;
+}
+
+.ruled-paper {
+  background: repeating-linear-gradient(white,
+      white 24px,
+      #eaeaea 25px);
+  background-size: 100% 25px;
+  border-left: 5px solid #5c6ac4;
+  padding: 1.25rem;
+  font-family: 'Lora', serif;
+  position: relative;
+}
+
+/* Container wrapping all notes */
+.note-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Individual card */
+.note-card {
+  flex: 1 1 300px;
+  max-width: 600px;
+  height: 460px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.note-card:hover {
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .note-card {
+    flex: 1 1 90%;
+    max-width: 100%;
+  }
+}
+
+.btn-outline-amber {
+  border-color: #d99002;
+  color: #d99002;
+}
+
+.btn-outline-amber:hover {
+  background-color: #d99002;
+  color: white;
 }

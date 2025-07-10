@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 const Signin = (props) => {
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+  });
   const [cred, setCred] = useState({ email: "", password: "" });
   let navigate = useNavigate();
 
@@ -25,10 +25,9 @@ const Signin = (props) => {
       props.showAlert('Invalid Entries', 'danger');
     }
     else {
-      console.log(json.token)
       localStorage.setItem('token', json.token);
-      navigate('/');
       props.showAlert('Logged In Successfully', 'success');
+      navigate('/');
     }
     setCred({ email: "", password: "" });
   }
@@ -69,6 +68,7 @@ const Signin = (props) => {
               value={cred.password}
               onChange={onchange}
               placeholder="Password"
+              autoComplete='ne'
             />
           </Form.Group>
           <div className="d-grid">

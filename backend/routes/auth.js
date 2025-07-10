@@ -17,9 +17,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ROUTE 1: SIGNUP page
+console.log('router auth file is fir')
 router.post('/signup', [
     body('email').isEmail().withMessage('Please enter a valid email address'),
-    body('password').isLength({ min: 5 }).withMessage('Password must be at least 6 characters long'),
+    body('password').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long'),
     body('name').isLength({ min: 3 }).withMessage('Name must be at least 3 characters long')
 ], async (req, res) => {
     let success = false;
@@ -44,10 +45,11 @@ router.post('/signup', [
         );
 
         const userId = newUser.rows[0].id;
-        const data = { user: { id: userId } };
-        const authtoken = jwt.sign(data, JWT_SECRET);
+        const data = { id: userId };
+        const token = jwt.sign(data, JWT_SECRET);
         success = true;
-        return res.status(200).json({ success, authtoken });
+        console.log('Token generated:', token); // Log the generated token for debugging
+        return res.status(200).json({ success, token });
     } catch (err) {
         console.error(err.message);
         return res.status(500).json({ success: false, error: 'Internal Server Error' });
@@ -58,7 +60,7 @@ router.post('/signup', [
 router.post('/signin',
     [
         body('email').isEmail().withMessage('Please enter a valid email address'),
-        body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
+        body('password').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long')
     ], // this array is for validation rules
     async (req, res) => {
         let success = false;
@@ -70,11 +72,11 @@ router.post('/signin',
             const email = req.body['email'];
             const result = await db.query('SELECT * FROM userinfo WHERE email =$1', [email]);
             if (result.rows.length === 0) {
-                return res.status(400).send(success, 'USER NOT FOUND');
+                return res.status(400).json({ success, error: 'USER NOT FOUND' });
             }
             const user = result.rows[0];
             if (!await bcrypt.compare(req.body['password'], user.password)) { // compare the hashed password with the password entere by the user req.body['password'] (entered by user ) and user.password (hashed password from database)
-                return res.status(400).send(success, 'Invalid password');
+                return res.status(400).json({ success, error: 'Invalid password' });
             }
             success = true;
             const payload = {
@@ -83,9 +85,10 @@ router.post('/signin',
                 email: user.email
             }
             const token = jwt.sign(payload, JWT_SECRET); // generate a JWT token with the user id, name and email
+            // console.log('Token generated:', token);
             res.json({ success, token }); // send the token back to the client
         } catch (err) {
-            return res.status(500).send('Error signing in: ' + err.message);
+            return res.status(500).json({ success: false, error: 'Error signing in: ' + err.message });
         }
     });
 
@@ -100,7 +103,7 @@ router.post('/getUser', fetchUser, async (req, res) => {
         }
         res.json(result.rows[0]); // send the user details back to the client
     } catch (err) {
-        return res.status(500).send('Error fetching user details: ' + err.message);
+        return res.status(500).json({ success: false, error: 'Error fetching user details: ' + err.message });
     }
 })
 

@@ -6,8 +6,27 @@ import db from './db.js';
 
 const app = express();
 const PORT = 5000;
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://snotebook-uwg4.onrender.com',
+  'https://snotebook-uwg4.onrender.com/api/auth',
+];
+
 db.connect();
-app.use(cors());
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // Allow credentials if needed
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods
+  allowedHeaders: ['Content-Type', 'auth-token'], // Specify allowed headers
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));

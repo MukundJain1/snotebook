@@ -11,11 +11,13 @@ const NoteState = (props) => {
 
   const getNotes = async () => {
     try {
+      const token = localStorage.getItem('token');
+      
       const response = await fetch(`${host}/api/notes/getNotes`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "auth-token": localStorage.getItem('token')
+          "auth-token": token
         },
       });
 

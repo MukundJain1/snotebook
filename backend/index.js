@@ -1,52 +1,40 @@
 import express from 'express';
-import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import notesRoutes from './routes/notes.js';
+import cors from 'cors';
 import db from './db.js';
 
 const app = express();
 const PORT = 5000;
 
-// Whitelisted origins allowed to access your API
 const allowedOrigins = [
   'http://localhost:3000',
   'https://snotebook-uwg4.onrender.com',
-  'https://snotebook-psi.vercel.app',
   'https://snotebook-ana726qk3-mukundjain1s-projects.vercel.app',
+  'https://snotebook-psi.vercel.app',
 ];
 
-// Enable CORS for all routes
+db.connect();
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
     } else {
-      return callback(new Error('Not allowed by CORS'));
+      callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'auth-token'],
+  credentials: true, // Allow credentials if needed
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods
+  allowedHeaders: ['Content-Type', 'auth-token'], // Specify allowed headers
 }));
 
-// Ensure preflight OPTIONS requests get handled
-app.options('*', cors());
-
-// Connect to DB
-db.connect();
-
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/notes', notesRoutes);
+app.use('/api/auth', authRoutes); // here this path /api/auth is prefix for all routes in auth.js
+app.use('/api/notes', notesRoutes); // assuming notes routes are also in authRoutes, otherwise import and use separately
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

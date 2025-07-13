@@ -7,14 +7,9 @@ import { fetchUser } from '../middleware/fetchUser.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
-const app = express();
 const router = express.Router(); // this is the router for auth routes
 
 const JWT_SECRET = process.env.JWT_SECRET; // secret key for signing JWT tokens, should be stored in an environment variable in production
-// Middleware to parse JSON and URL-encoded data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // ROUTE 1: SIGNUP page
 router.post('/signup', [
